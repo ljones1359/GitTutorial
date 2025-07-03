@@ -2,3 +2,5 @@
 import pyodbc
 
 print("Hello, World!")
+
+print("today is a good day")
