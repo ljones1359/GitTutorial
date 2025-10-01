@@ -52,6 +52,45 @@ plot_ly(halloween_zombie_outbreak, x = ~city, y = ~infected, type = "bar",
 
 ```
 
+### Linear model
+
+```{r}
+# Fit linear model
+fit <- lm(incidence_rate ~ haunted_houses, data = halloween_zombie_outbreak)
+
+# Create predicted values
+halloween_zombie_outbreak$pred <- predict(fit)
+
+halloween_zombie_outbreak$pred <- predict(fit)
+
+plot_ly(halloween_zombie_outbreak, 
+        x = ~haunted_houses, 
+        y = ~incidence_rate, 
+        type = "scatter", 
+        mode = "markers",
+        text = ~city, 
+        marker = list(size = 10, color = "purple")) %>%
+  add_trace(x = ~haunted_houses, 
+            y = ~pred, 
+            type = "scatter", 
+            mode = "lines",
+            line = list(color = "orange")) %>%
+  layout(title = "Haunted Houses vs. Incidence Rate with Regression",
+         xaxis = list(title = "Number of Haunted Houses"),
+         yaxis = list(title = "Incidence Rate per 100,000"))
+
+```
+
+### Density Plot
+
+```{r}
+plot_ly(halloween_zombie_outbreak, x = ~haunted_houses, y = ~incidence_rate,
+        type = "scatter", mode = "markers", marker = list(size = 10, color = "purple")) %>%
+  add_histogram(x = ~haunted_houses, yaxis = "y2") %>%
+  layout(
+    yaxis2 = list(overlaying = "y", side = "right", title = "Histogram of Haunted Houses")
+  )
+```
 
 
 Column {data-width=650}
