@@ -101,7 +101,7 @@ plot_ly(halloween_zombie_outbreak,
         type = "scatter", 
         mode = "markers",
         text = ~city, 
-        marker = list(size = 10, color = "purple")) %>%
+        marker = list(size = 5, color = "blue")) %>%
   add_trace(x = ~haunted_houses, 
             y = ~incidence_rate, 
             type = "scatter", 
