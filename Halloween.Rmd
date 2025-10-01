@@ -1,0 +1,115 @@
+---
+title: "Halloween Zombie Outbreak Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+
+```
+
+
+
+```{r}
+halloween_zombie_outbreak <- data.frame(
+  city = c("Spookville", "Ghosttown", "Witchburg", "Vampireton", "Werewolfville"),
+  population = c(50000, 75000, 60000, 80000, 45000),
+  infected = c(500, 1200, 800, 1500, 300),
+  recovered = c(100, 300, 200, 400, 50),
+  haunted_houses = c(10, 15, 8, 20, 5),
+  pumpkin_patches = c(5, 8, 6, 4, 7),
+  date = as.Date(c("2024-10-25", "2024-10-26", "2024-10-27", "2024-10-28", "2024-10-29"))
+)
+
+# Calculate incidence and case fatality rates
+halloween_zombie_outbreak <- halloween_zombie_outbreak %>%
+  mutate(
+    incidence_rate = (infected / population) * 100000,
+    case_fatality_rate = 1 - (recovered / infected)
+  )
+
+
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Zombie Virus Outbreak by City
+
+```{r}
+plot_ly(halloween_zombie_outbreak, x = ~city, y = ~infected, type = "bar", 
+        marker = list(color = "orange")) %>%
+  layout(title = "Zombie Virus Outbreak by City",
+         xaxis = list(title = "City"),
+         yaxis = list(title = "Number of Infected Cases"))
+
+```
+
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Incidence Rate per 100,000 Population
+
+```{r}
+gauge(round(mean(halloween_zombie_outbreak$incidence_rate), 2),
+      min = 0, max = 2000, symbol = "per 100k", 
+      gaugeSectors(success = c(0, 500), warning = c(501, 1000), danger = c(1001, 2000)))
+
+```
+
+### Case Fatality Rate
+```{r}
+gauge(round(mean(halloween_zombie_outbreak$case_fatality_rate) * 100, 2),
+      min = 0, max = 100, symbol = "%", 
+      gaugeSectors(success = c(0, 30), warning = c(31, 60), danger = c(61, 100)))
+
+
+```
+
+
+
+### Correlation: Haunted Houses vs. Incidence Rate
+
+
+```{r}
+plot_ly(halloween_zombie_outbreak, x = ~haunted_houses, y = ~incidence_rate, 
+        type = "scatter", mode = "markers",
+        text = ~city, marker = list(size = 10, color = "purple")) %>%
+  layout(title = "Haunted Houses vs. Incidence Rate",
+         xaxis = list(title = "Number of Haunted Houses"),
+         yaxis = list(title = "Incidence Rate per 100,000"))
+
+```
+
+### Correlation: Haunted Houses vs. Incidence Rate with Line
+
+```{r}
+library(plotly)
+
+plot_ly(halloween_zombie_outbreak, 
+        x = ~haunted_houses, 
+        y = ~incidence_rate, 
+        type = "scatter", 
+        mode = "markers",
+        text = ~city, 
+        marker = list(size = 10, color = "purple")) %>%
+  add_trace(x = ~haunted_houses, 
+            y = ~incidence_rate, 
+            type = "scatter", 
+            mode = "lines",
+            line = list(color = "orange")) %>%
+  layout(title = "Haunted Houses vs. Incidence Rate",
+         xaxis = list(title = "Number of Haunted Houses"),
+         yaxis = list(title = "Incidence Rate per 100,000"))
+
+```
+
