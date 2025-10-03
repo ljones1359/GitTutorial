@@ -12,3 +12,8 @@ print("Another change")
 time <- "time is short"
 
 print(time)
+
+over <- "this is going to take a long time to learn, but lets get going with the small things"
+
+print(over)
+cat(time,",", over)
